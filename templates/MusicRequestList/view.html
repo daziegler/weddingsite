@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Musikwünsche</title>
+    <meta content="60" http-equiv="refresh"> <!-- Refresh every minute -->
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="../../dist/subpage.css" rel="stylesheet">
+</head>
+<body class="_music-request-list-subpage">
+<section class="_centered-content" id="main">
+    <article class="_music-request-wrapper">
+        <header>
+            <h1>Musikwünsche</h1>
+            <p>Hier findest du alle eingereichten Musikwünsche.</p>
+        </header>
+
+        <div class="_music-request-controls">
+            <button class="_js_toggle-sort">
+                Sortierung umkehren
+                <span class="_sort-indicator _js_sort-indicator">(Neu → Alt)</span>
+            </button>
+        </div>
+
+        <ul class="_music-request-list _js_music-request-list">
+            [[MUSIC_REQUEST_LIST]]
+        </ul>
+    </article>
+</section>
+
+<footer class="_sticky-footer">
+    <div class="_footer-inner">
+        <a class="button" href="/">← Startseite</a>
+    </div>
+</footer>
+
+<script>
+  const list = document.querySelector('._js_music-request-list');
+  const items = [...list.querySelectorAll('._js_music-request-list-item')];
+  const indicator = document.querySelector('._js_sort-indicator');
+  const toggleButton = document.querySelector('._js_toggle-sort');
+  let ascending = false; // Default: Neu → Alt
+
+  function updateIndicator() {
+    indicator.textContent = ascending ? '(Alt → Neu)' : '(Neu → Alt)';
+  }
+
+  function applySort() {
+    const sorted = items.sort((a, b) => {
+      const aOrder = parseInt(a.dataset.order, 10);
+      const bOrder = parseInt(b.dataset.order, 10);
+      return ascending ? aOrder - bOrder : bOrder - aOrder;
+    });
+
+    sorted.forEach(item => list.appendChild(item));
+    updateIndicator();
+  }
+
+  toggleButton.addEventListener('click', () => {
+    ascending = !ascending;
+    applySort();
+    localStorage.setItem('musicSortAsc', JSON.stringify(ascending));
+  });
+
+  if (localStorage.getItem('musicSortAsc') !== null) {
+    ascending = JSON.parse(localStorage.getItem('musicSortAsc'));
+  }
+
+  applySort();
+</script>
+</body>
+</html>

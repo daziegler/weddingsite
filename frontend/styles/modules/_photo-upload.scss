@@ -1,0 +1,24 @@
+@use '../variables' as *;
+
+._photo-upload-wrapper {
+  max-width: var(--container-width);
+  margin: 2em auto;
+  padding: 1em;
+  background: var(--photo-upload-background);
+  border: 2px dashed var(--font-color-primary);
+  border-radius: 0.5em;
+  text-align: center;
+
+  h2 {
+    font-family: var(--font-family-headline), sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: var(--font-color-primary);
+  }
+
+  p {
+    font-size: 0.95em;
+    margin-bottom: 1em;
+    color: var(--font-color-bold);
+  }
+}

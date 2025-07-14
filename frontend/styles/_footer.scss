@@ -1,0 +1,20 @@
+@use 'variables' as *;
+
+#footer {
+  color: var(--font-color-bold);
+  background: var(--background-color-alt);
+  border-top: solid 2px var(--border-color);
+  padding: 1em 0;
+  text-align: center;
+  font-size: 0.9em;
+
+  a {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    border-bottom: none;
+
+    &:hover {
+      color: var(--font-color-primary-hover);
+    }
+  }
+}

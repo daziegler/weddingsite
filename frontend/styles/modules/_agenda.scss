@@ -1,0 +1,115 @@
+@use '../variables' as *;
+
+._timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 60rem;
+  margin: 0 auto;
+  position: relative;
+
+  /* vertical line */
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 2px;
+    background: var(--font-color-primary);
+    z-index: 0;
+  }
+
+  ._timeline-marker {
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid var(--font-color-primary);
+    border-radius: 50%;
+    background: white;
+    z-index: 1;
+  }
+
+  ._timeline-placeholder {
+    flex: 1 1 0;
+    min-height: 1px;
+  }
+
+  ._timeline-item-time {
+    font-weight: var(--font-weight-bold);
+    color: var(--font-color-bold);
+    letter-spacing: 0.05rem;
+  }
+
+  ._timeline-item-title {
+    text-transform: uppercase;
+    color: var(--font-color);
+  }
+}
+
+@media screen and (min-width: $minDesktop) {
+  ._timeline {
+    &::before {
+      top: 0.6rem;
+      left: 50%;
+      transform: translateX(-1px);
+    }
+
+    ._timeline-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    ._timeline-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      &:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+
+      &:nth-child(odd) ._timeline-item {
+        align-items: flex-end;
+      }
+    }
+
+    ._timeline-marker {
+      margin: 0.6rem 2rem 0;
+      align-self: normal;
+    }
+  }
+}
+
+@media screen and (max-width: $maxMobile) {
+  ._timeline {
+    &::before {
+      top: 0.4rem;
+      left: 0.4rem;
+      transform: none;
+    }
+
+    ._timeline-row {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    ._timeline-marker {
+      margin: 0.4rem 0 0 0;
+      align-self: flex-start;
+    }
+
+    ._timeline-item {
+      flex: 1;
+      align-items: flex-start;
+      text-align: left;
+      padding: 0;
+    }
+
+    ._timeline-placeholder {
+      display: none;
+    }
+  }
+}

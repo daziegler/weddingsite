@@ -1,0 +1,52 @@
+@use '../variables' as *;
+
+._music-request-list-subpage {
+  ._music-request-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    color: #444;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  ._music-request-controls {
+    margin-top: -1rem;
+  }
+
+  ._music-request-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  ._music-request-list-item {
+    padding: 0.75em 1em;
+    background: var(--background-color-alt);
+    border-left: 5px solid var(--font-color-primary);
+  }
+
+  ._sort-indicator {
+    font-size: 0.7em;
+    margin-left: 0.5em;
+  }
+}
+
+@media screen and (max-width: $maxMobile) {
+  ._music-request-list-subpage {
+    ._music-request-controls button {
+      width: 100%;
+    }
+  }
+}

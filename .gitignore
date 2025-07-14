@@ -1,0 +1,15 @@
+/.idea/
+
+/.secrets/
+/.settings/
+/.optional-templates/
+/.images/
+
+/files/
+/uploads/
+
+/node_modules/
+/vendor/
+
+/public/dist/
+/public/vendor/

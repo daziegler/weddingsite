@@ -1,0 +1,25 @@
+@use '../variables' as *;
+
+._login-form-subpage {
+  input[type=password] {
+    width: 100%;
+    padding: 0.5em;
+    margin: 0.5em 0;
+  }
+
+  button {
+    padding: 0.5em 1em;
+    background: var(--font-color-primary);
+    color: var(--white);
+    border: none;
+
+    &:hover {
+      background: var(--font-color-primary-hover);
+      cursor: pointer;
+    }
+  }
+
+  .error {
+    color: var(--color-error);
+  }
+}

@@ -1,0 +1,47 @@
+<link href="../../vendor/filepond/filepond.min.css" rel="stylesheet">
+<link href="../../vendor/filepond/filepond-plugin-image-preview.min.css" rel="stylesheet">
+<script src="../../vendor/filepond/filepond.min.js"></script>
+<script src="../../vendor/filepond/filepond-plugin-image-preview.min.js"></script>
+
+<p class="_text-center">
+    Ob Schnappschuss, Selfie oder Tanzflächen-Action – wir freuen uns riesig, wenn ihr eure Fotos von der Feier mit uns
+    teilt!
+    Hier könnt ihr während und nach der Hochzeit Bilder hochladen, damit wir all die besonderen, lustigen und
+    emotionalen Momente auch im Nachhinein nochmal erleben können.
+</p>
+<div class="_photo-upload-wrapper">
+    <h2>Fotos hochladen</h2>
+    <p>Zieh deine Bilder hier rein oder tippe, um sie auszuwählen. Mehrere Bilder möglich.</p>
+
+    <input class="filepond _js_photo-upload"
+           multiple
+           name="photo"
+           type="file">
+</div>
+
+<script>
+  FilePond.registerPlugin(FilePondPluginImagePreview);
+
+  FilePond.create(document.querySelector('._js_photo-upload'), {
+    allowMultiple: true,
+    allowRevert: false,
+    allowRemove: false,
+    maxFiles: 25,
+    maxFileSize: '15MB',
+    labelIdle: '<span class="filepond--label-action">Dateien auswählen</span> oder hierhin ziehen',
+    server: {
+      url: '[[PHOTO_UPLOAD_URL]]',
+      process: {
+        url: '',
+        method: 'POST',
+        withCredentials: false,
+        headers: {},
+        timeout: 7000,
+        onload: response => console.log('Uploaded:', response),
+        onerror: response => console.error('Upload error:', response),
+      },
+    },
+    acceptedFileTypes: ['image/*'],
+    instantUpload: true,
+  });
+</script>

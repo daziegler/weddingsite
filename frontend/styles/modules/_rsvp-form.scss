@@ -1,0 +1,103 @@
+@use '../variables' as *;
+
+._rsvp-form {
+  input[type="radio"] {
+    appearance: radio;
+    accent-color: var(--font-color-primary);
+    transform: scale(1.2);
+  }
+
+  ._rsvp-form-group {
+    margin-top: 2em;
+  }
+
+  ._rsvp-radio-group {
+    display: flex;
+    gap: 2em;
+    margin-top: 0.5em;
+    flex-wrap: wrap;
+  }
+
+  ._rsvp-radio-group > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  ._rsvp-radio-group input[type="radio"] {
+    margin: 0;
+  }
+
+  ._rsvp-radio-group label {
+    font-weight: var(--font-weight-normal);
+    text-transform: none;
+    color: var(--font-color-bold);
+    margin: 0;
+    display: inline;
+  }
+
+  ._rsvp-guest-wrapper {
+    margin-top: 2em;
+  }
+
+  ._rsvp-guest-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+  }
+
+  ._rsvp-guest-entry {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
+  }
+
+  ._rsvp_guest-name {
+    flex: 2;
+    min-width: 10em;
+  }
+
+  ._rsvp_guest-status {
+    flex: 1;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+  }
+
+  ._rsvp_guest-status label {
+    font-weight: var(--font-weight-normal);
+    color: var(--font-color-bold);
+    text-transform: none;
+  }
+
+  ._rsvp_guest-allergies {
+    flex: 3;
+    min-width: 12em;
+  }
+}
+
+@media screen and (max-width: $maxMobile) {
+  ._rsvp-form {
+    ._rsvp-guest-entry {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75em;
+    }
+
+    ._rsvp-guest-entry > input,
+    ._rsvp-guest-entry > select {
+      width: 100%;
+    }
+
+    ._rsvp-add-guest {
+      width: 100%;
+      text-align: center;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+    }
+  }
+}

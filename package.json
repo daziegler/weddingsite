@@ -1,0 +1,39 @@
+{
+  "name": "hochzeit-ds",
+  "version": "1.0.0",
+  "description": "Wedding Site",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daziegler/weddingsite.git"
+  },
+  "author": "Daniel Ziegler",
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "license-checker": "^25.0.1",
+    "npm-run-all": "^4.1.5",
+    "sass": "^1.89.2"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "baguettebox.js": "^1.12.0",
+    "filepond": "^4.32.8",
+    "filepond-plugin-image-preview": "^4.6.12",
+    "tippy.js": "^6.3.7"
+  },
+  "scripts": {
+    "build": "npm run build:main && npm run build:sub && npm run copy:libs",
+    "build:main": "sass frontend/styles/main.scss public/dist/main.css --style=compressed --no-source-map",
+    "build:sub": "sass frontend/styles/subpage.scss public/dist/subpage.css --style=compressed --no-source-map",
+    "watch": "npm-run-all --parallel watch:main watch:sub",
+    "watch:main": "sass frontend/styles/main.scss public/dist/main.css --watch --style=compressed --no-source-map",
+    "watch:sub": "sass frontend/styles/subpage.scss public/dist/subpage.css --watch --style=compressed --no-source-map",
+    "copy:libs": "npm run copy:baguette && npm run copy:filepond && npm run copy:image-preview && npm run copy:popper && npm run copy:tippy",
+    "copy:baguette": "cpx \"node_modules/baguettebox.js/dist/**/*.{js,css}\" public/vendor/baguetteBox",
+    "copy:filepond": "cpx \"node_modules/filepond/dist/**/*.{js,css,map}\" public/vendor/filepond",
+    "copy:image-preview": "cpx \"node_modules/filepond-plugin-image-preview/dist/**/*.{js,css}\" public/vendor/filepond",
+    "copy:popper": "cpx \"node_modules/@popperjs/core/dist/umd/popper.min.js\" public/vendor/popper",
+    "copy:tippy": "cpx \"node_modules/tippy.js/dist/tippy.umd.min.js\" public/vendor/tippy && cpx \"node_modules/tippy.js/dist/tippy.css\" public/vendor/tippy",
+    "licenses": "npx license-checker --production --json > LICENSES.json"
+  }
+}

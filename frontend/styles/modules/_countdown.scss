@@ -1,0 +1,35 @@
+@use '../variables' as *;
+
+._countdown-grid-wrapper {
+  text-align: center;
+  margin: 2em 0;
+
+  ._countdown-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    font-family: inherit;
+  }
+
+  ._countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: var(--font-weight-normal);
+    color: var(--font-color-bold);
+    min-width: 4rem;
+
+    ._value {
+      font-size: 2.5rem;
+      line-height: 1.2;
+
+      ._label {
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.1rem;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@use '../variables' as *;
+
+._photo-nav {
+  text-align: center;
+  margin: 1.5em 0 0.5em;
+
+  a {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+
+    &:hover {
+      color: var(--font-color-primary-hover);
+      border-bottom-color: var(--font-color-primary-hover);
+    }
+  }
+}

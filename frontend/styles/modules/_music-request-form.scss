@@ -1,0 +1,41 @@
+@use '../variables' as *;
+
+._music-request-form {
+  ._music-request-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+  }
+
+  ._music-request-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  ._music-request-entry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+
+    input {
+      flex: 1;
+      min-width: 10em;
+    }
+  }
+}
+
+@media screen and (max-width: $maxMobile) {
+  ._music-request-form {
+    ._music-request-entry {
+      flex-direction: column;
+      gap: 0.75em;
+    }
+
+    input[type="submit"],
+    ._music-add-song {
+      width: 100%;
+    }
+  }
+}

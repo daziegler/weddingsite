@@ -1,0 +1,28 @@
+@use '../variables' as *;
+
+#header {
+  position: relative;
+  text-align: center;
+}
+
+#header > .container {
+  padding: 14em 0 7em 0;
+}
+
+#header h1 {
+  font-family: var(--font-family-headline);
+  font-weight: var(--font-weight-headline);
+  color: var(-white);
+  text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
+  font-size: 3em;
+  letter-spacing: 13px;
+}
+
+#header h2 {
+  text-transform: uppercase;
+  font-weight: var(--font-weight-normal);
+  color: var(--font-color-header-subtext);
+  margin: 2.5em 0 0 0;
+  letter-spacing: 3px;
+  text-align: center;
+}

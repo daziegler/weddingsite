@@ -1,0 +1,61 @@
+<div class="_countdown-grid-wrapper">
+    <h2 class="_js_countdown-title">Noch ...</h2>
+    <div class="_countdown-grid" id="countdown">Loading...</div>
+</div>
+
+<script>
+  const targetDate = new Date("[[WEDDING_DATE]]").getTime();
+
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    let distance = targetDate - now;
+
+    const countdownEl = document.getElementById("countdown");
+    const countDownTitleEl = document.querySelector("._js_countdown-title");
+    let countdownTitle = 'Noch...';
+    let daysLabel = 'Tage';
+    if (distance < 0) {
+      countdownTitle = 'Seit...';
+      distance = now - targetDate;
+      daysLabel = 'Tagen';
+      // distance = 0;
+    }
+    countDownTitleEl.textContent = countdownTitle;
+
+    const totalSeconds = Math.floor(distance / 1000);
+    const days = Math.floor(totalSeconds / (24 * 60 * 60));
+    const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (days === 1) {
+      daysLabel = 'Tag';
+    }
+
+    countdownEl.innerHTML = `
+    <div class="_countdown-unit">
+      <div class="_value">${days}</div>
+      <div class="_label">${daysLabel}</div>
+    </div>
+    <div class="_countdown-unit">
+      <div class="_value">${String(hours).padStart(2, '0')}</div>
+      <div class="_label">Stunden</div>
+    </div>
+    <div class="_countdown-unit">
+      <div class="_value">${String(minutes).padStart(2, '0')}</div>
+      <div class="_label">Minuten</div>
+    </div>
+    <div class="_countdown-unit">
+      <div class="_value">${String(seconds).padStart(2, '0')}</div>
+      <div class="_label">Sekunden</div>
+    </div>
+  `;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>

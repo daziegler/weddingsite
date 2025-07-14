@@ -1,0 +1,10 @@
+@use '../variables' as *;
+
+._directions {
+  text-align: center;
+
+  iframe {
+    border: 0;
+    max-width: var(--container-width);
+  }
+}

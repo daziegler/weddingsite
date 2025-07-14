@@ -1,0 +1,16 @@
+@use '../variables' as *;
+
+._thank-you-subpage {
+  ._thank-you {
+    margin: 10vh auto;
+    padding: 2em;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 1.6;
+
+    p {
+      color: var(--font-color-header-subtext);
+      font-size: 1.1em;
+    }
+  }
+}

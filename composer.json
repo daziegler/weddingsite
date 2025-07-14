@@ -1,0 +1,12 @@
+{
+  "name": "daziegler/weddingsite",
+  "autoload": {
+    "psr-4": {
+      "WeddingSite\\": "src/"
+    }
+  },
+  "require": {
+    "ext-fileinfo": "*",
+    "ext-zip": "*"
+  }
+}

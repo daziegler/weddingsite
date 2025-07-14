@@ -1,0 +1,100 @@
+<article class="box post">
+    <header>
+        <h2>Zu- oder Absage</h2>
+    </header>
+    <form action="[[RSVP_FORM_HANDLER_URL]]" class="_rsvp-form" method="POST">
+        <div class="row gtr-uniform">
+            <div class="col-12 _rsvp-guest-wrapper">
+                <label class="_text-center">
+                    Bitte gib im Formular an, ob und wen du mitbringst und ob ggf. Nahrungsmittelunverträglichkeiten
+                    bestehen.
+                </label>
+                <p class="_text-center">
+                    Du darfst gern eine Begleitung mitbringen – egal ob Partner:in, beste Freund:in oder
+                    Lieblingsmensch. Hauptsache, du fühlst dich mit der Person wohl. ♥️
+                </p>
+
+                <div class="_rsvp-guest-group">
+                    <div class="_rsvp-guest-entry">
+                        <input class="_rsvp_guest-name" name="guests[0][name]" placeholder="Name" required type="text"/>
+
+                        <select class="_rsvp_guest-status" name="guests[0][status]" required>
+                            <option disabled hidden selected value="">Zu-/Absage</option>
+                            <option value="yes">Zusage</option>
+                            <option value="no">Absage</option>
+                        </select>
+
+                        <input class="_rsvp_guest-allergies" name="guests[0][allergies]"
+                               placeholder="Nahrungsmittelunverträglichkeiten"
+                               type="text"/>
+                    </div>
+
+                    <button class="button alt _rsvp-add-guest" type="button">+ Weitere Person hinzufügen</button>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <input class="button primary" type="submit" value="Abschicken"/>
+            </div>
+        </div>
+    </form>
+</article>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addBtn = document.querySelector("._rsvp-add-guest");
+    const guestGroup = document.querySelector("._rsvp-guest-group");
+    let guestIndex = 1;
+
+    function createGuestEntry(index) {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("_rsvp-guest-entry");
+
+      wrapper.innerHTML = `
+        <input class="_rsvp_guest-name" type="text" name="guests[${index}][name]" placeholder="Name" />
+        <select class="_rsvp_guest-status" name="guests[${index}][status]">
+            <option value="" disabled selected hidden>Zu-/Absage</option>
+            <option value="yes">Zusage</option>
+            <option value="no">Absage</option>
+        </select>
+        <input class="_rsvp_guest-allergies" type="text" name="guests[${index}][allergies]" placeholder="Nahrungsmittelunverträglichkeiten" />
+      `;
+
+      return wrapper;
+    }
+
+    addBtn.addEventListener("click", () => {
+      guestIndex++;
+      const newEntry = createGuestEntry(guestIndex);
+      guestGroup.insertBefore(newEntry, addBtn);
+    });
+
+    const form = document.querySelector("form._rsvp-form");
+
+    form.addEventListener("submit", function (e) {
+      const guestEntries = document.querySelectorAll("._rsvp-guest-entry");
+      let valid = true;
+
+      guestEntries.forEach((entry) => {
+        const name = entry.querySelector("input._rsvp_guest-name").value.trim();
+        const status = entry.querySelector("select._rsvp_guest-status").value;
+
+        const isNameFilled = name.length > 0;
+        const isStatusFilled = status.length > 0;
+
+        if ((isNameFilled && !isStatusFilled) || (!isNameFilled && isStatusFilled)) {
+          valid = false;
+          entry.classList.add("has-error");
+          entry.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          entry.classList.remove("has-error");
+        }
+      });
+
+      if (!valid) {
+        e.preventDefault();
+        alert("Bitte fülle entweder sowohl Name als auch Zu-/Absage aus oder lasse beide leer.");
+      }
+    });
+  });
+</script>

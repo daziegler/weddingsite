@@ -1,0 +1,57 @@
+<article class="box post">
+    <header>
+        <h2>Musikwünsche</h2>
+    </header>
+
+    <form action="[[MUSIC_REQUEST_FORM_HANDLER_URL]]" class="_music-request-form" method="post">
+        <label class="_text-center">
+            Was darf auf keinen Fall fehlen? Was bringt dich auf die Tanzfläche?
+        </label>
+        <p class="_text-center">
+            Ob absoluter Lieblingshit, nostalgischer Throwback oder heimlicher Ohrwurm – verrate uns, was du unbedingt
+            hören möchtest!
+            <br>
+            Du kannst hier schon vorab deine Wünsche einreichen oder sie ganz entspannt am Abend direkt beim DJ
+            loswerden.
+        </p>
+        <div class="_music-request-wrapper">
+            <div class="_music-request-group">
+                <div class="_music-request-entry">
+                    <input class="_music_request-song" name="songs[0]" placeholder="Songtitel, Interpret" required
+                           type="text"/>
+                </div>
+
+                <button class="button alt _music-add-song" type="button">+ Weiteren Song hinzufügen</button>
+            </div>
+
+            <div>
+                <input class="button primary" type="submit" value="Abschicken"/>
+            </div>
+        </div>
+    </form>
+</article>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addBtn = document.querySelector("._music-add-song");
+    const songGroup = document.querySelector("._music-request-group");
+    let songIndex = 1;
+
+    function createSongEntry(index) {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("_music-request-entry");
+
+      wrapper.innerHTML = `
+        <input class="_music_request-song" type="text" name="songs[${index}]" placeholder="Songtitel, Interpret" />
+      `;
+
+      return wrapper;
+    }
+
+    addBtn.addEventListener("click", () => {
+      const newEntry = createSongEntry(songIndex);
+      songGroup.insertBefore(newEntry, addBtn);
+      songIndex++;
+    });
+  });
+</script>

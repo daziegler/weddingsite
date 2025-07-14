@@ -1,0 +1,39 @@
+@use '../variables' as *;
+
+._faq-item {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--form-color-background);
+  transition: box-shadow 0.2s ease-in-out;
+  margin-bottom: 1.25em;
+  overflow: hidden;
+
+  summary {
+    font-weight: bold;
+    color: var(--font-color-primary);
+    font-size: 1.1em;
+    outline: none;
+    padding: 1em;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &[open] ._faq-answer {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  ._faq-answer {
+    border-top: 1px solid var(--font-color-primary);
+    color: var(--font-color);
+    line-height: 1.6;
+    padding: 1em 0;
+    margin: 0 1em;
+
+    opacity: 0;
+    transform: translateY(-0.5em);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+}

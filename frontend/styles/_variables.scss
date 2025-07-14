@@ -1,0 +1,39 @@
+:root {
+  /* Color Variables */
+  --font-color-primary: #880000;
+  --font-color-primary-hover: #b22222;
+
+  --font-color-header-subtext: #888888;
+  --font-color: #777777;
+  --font-color-bold: #666666;
+  --font-color-link-underline: #dddddd;
+  --font-color-icons: #e4e4e4;
+
+  --border-color: #e5e5e5;
+
+  --form-color-placeholder: #555555;
+  --form-color-background: #e8e8e8;
+
+  --background-color-alt: #f0f0f0;
+  --background-color-tertiary: #878787;
+  --background-color-tertiary-hover: #979797;
+
+  --white: #ffffff;
+  --color-error: red;
+
+  /* Font Variables */
+  --font-weight-text: 300;
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+  --font-weight-headline: 700;
+
+  --font-family: 'Source Sans Pro';
+  --font-family-headline: 'Arvo';
+
+  /* Width Variables */
+  --container-width: 55em;
+}
+
+/* Breakpoint Variables */
+$maxMobile: 768px;
+$minDesktop: $maxMobile + 1px;
