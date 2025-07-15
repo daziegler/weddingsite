@@ -20,7 +20,7 @@ final readonly class GetRsvpListController extends AbstractController
     {
         $projectRoot = dirname(__DIR__, 3);
         $this->storageFile = sprintf('%s/files/rsvps.json', $projectRoot);
-        $this->passwordFile = sprintf('%s/.secrets/gallery-password.txt', $projectRoot);
+        $this->passwordFile = sprintf('%s/.secrets/rsvp-password.txt', $projectRoot);
     }
 
     public function handle(): void
