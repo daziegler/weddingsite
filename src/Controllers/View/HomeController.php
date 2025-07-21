@@ -55,7 +55,9 @@ final readonly class HomeController extends AbstractController
         // Modules that need to be disabled before the wedding starts
         if ($isBeforeWedding) {
             $modules[] = $this->buildContactModule();
-            $modules[] = new RsvpForm();
+
+            $respondUntilDate = $this->retrieveRespondUntilDate();
+            $modules[] = new RsvpForm($respondUntilDate);
         }
 
         // Modules that need to be disabled after the wedding ends
@@ -79,6 +81,15 @@ final readonly class HomeController extends AbstractController
         $timezone = new DateTimeZone($data['wedding_timezone']);
 
         return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $weddingDate, $timezone);
+    }
+
+    private function retrieveRespondUntilDate(): DateTimeImmutable
+    {
+        $data = $this->readSettingsFile('general.json');
+        $weddingDate = $data['respond_until_date'];
+        $timezone = new DateTimeZone($data['wedding_timezone']);
+
+        return DateTimeImmutable::createFromFormat('Y-m-d', $weddingDate, $timezone);
     }
 
     private function buildDirectionsModule(): Directions
