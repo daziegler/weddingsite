@@ -11,14 +11,20 @@ final readonly class FAQ extends AbstractModule
     /**
      * @param FaqItem[] $faqItems
      */
-    public function __construct(private array $faqItems) {}
+    public function __construct(private FaqIntro $faqIntro, private array $faqItems) {}
 
     public function render(): string
     {
         $html = $this->getTemplate();
+        $html = $this->replaceFaqIntro($html);
         $html = $this->replaceFaqItems($html);
 
         return $html;
+    }
+
+    private function replaceFaqIntro(string $html): string
+    {
+        return str_replace('[[FAQ_INTRO]]', $this->faqIntro->render(), $html);
     }
 
     private function replaceFaqItems(string $html): string

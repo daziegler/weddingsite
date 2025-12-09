@@ -20,6 +20,7 @@ use WeddingSite\Modules\FaqItem;
 use WeddingSite\Modules\GalleryLink;
 use WeddingSite\Modules\IntroText;
 use WeddingSite\Modules\MusicRequestForm;
+use WeddingSite\Modules\Photo;
 use WeddingSite\Modules\PhotoHighlight;
 use WeddingSite\Modules\PhotoHighlightItem;
 use WeddingSite\Modules\PhotoUpload;
@@ -38,40 +39,70 @@ final readonly class HomeController extends AbstractController
         $now = new DateTimeImmutable('now', $weddingDateTime->getTimezone());
         $isBeforeWedding = $now < $weddingDateTime;
         $isAfterWedding = $now >= $weddingDateTime->modify('+1 day');
+        $isDuringWedding = ($isBeforeWedding === false) && ($isAfterWedding === false);
 
         $settings = $this->readSettingsFile('general.json');
 
         $modules[] = new Countdown($weddingDateTime);
-        $modules[] = new IntroText($settings['intro_headline'], $settings['intro_text']);
-
-        $modules[] = $this->buildDirectionsModule();
-        $modules[] = $this->buildAgendaModule();
-
-        $modules[] = new FaqIntro();
-        $modules[] = $this->buildFAQModule();
-
         $modules[] = $this->buildPhotoHighlightModule();
 
-        // Modules that need to be disabled before the wedding starts
-        if ($isBeforeWedding) {
-            $modules[] = $this->buildContactModule();
-
-            $respondUntilDate = $this->retrieveRespondUntilDate();
-            $modules[] = new RsvpForm($respondUntilDate);
+        if ($isBeforeWedding === true) {
+            $modules = array_merge($modules, $this->getBeforeWeddingModules($settings));
+        } else {
+            if ($isDuringWedding === true) {
+                $modules = array_merge($modules, $this->getDuringWeddingModules($settings));
+            } else {
+                $modules = array_merge($modules, $this->getAfterWeddingModules($settings));
+            }
         }
-
-        // Modules that need to be disabled after the wedding ends
-        if ($isAfterWedding === false) {
-            $modules[] = new MusicRequestForm();
-        }
-
-        if ($isAfterWedding === true) {
-            $modules[] = new GalleryLink();
-        }
-        $modules[] = new PhotoUpload();
 
         $layout = new Layout($settings, $modules);
         echo $layout->render();
+    }
+
+    private function getBeforeWeddingModules(array $settings): array
+    {
+        return [
+            new IntroText($settings['intro_headline'], $settings['intro_text']),
+            $this->buildDirectionsModule(),
+            $this->buildAgendaModule(),
+            $this->buildFAQModule(),
+            $this->buildContactModule(),
+            $this->buildRsvpFormModule(),
+            new MusicRequestForm(),
+        ];
+    }
+
+    private function getDuringWeddingModules(array $settings): array
+    {
+        return [
+            new IntroText($settings['intro_headline'], $settings['intro_text']),
+            $this->buildAgendaModule(),
+            $this->buildFAQModule(),
+            new Photo(
+                null,
+                new PhotoUpload(),
+            ),
+            new MusicRequestForm(),
+        ];
+    }
+
+    private function getAfterWeddingModules(array $settings): array
+    {
+        return [
+            new IntroText($settings['intro_headline_thank_you'], $settings['intro_text_thank_you']),
+            new Photo(
+                new GalleryLink(),
+                new PhotoUpload(),
+            ),
+        ];
+    }
+
+    private function buildRsvpFormModule(): RsvpForm
+    {
+        $respondUntilDate = $this->retrieveRespondUntilDate();
+
+        return new RsvpForm($respondUntilDate);
     }
 
     private function retrieveWeddingDateTime(): DateTimeImmutable
@@ -120,6 +151,8 @@ final readonly class HomeController extends AbstractController
 
     private function buildFAQModule(): FAQ
     {
+        $faqIntro = new FaqIntro();
+
         $faqItems = [];
         foreach ($this->readSettingsFile('faq.json') as $entry) {
             $question = $entry['question'] ?? '';
@@ -130,7 +163,7 @@ final readonly class HomeController extends AbstractController
             $faqItems[] = new FaqItem($question, $answer);
         }
 
-        return new FAQ($faqItems);
+        return new FAQ($faqIntro, $faqItems);
     }
 
     private function buildPhotoHighlightModule(): PhotoHighlight
