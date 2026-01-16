@@ -117,10 +117,10 @@ final readonly class HomeController extends AbstractController
     private function retrieveRespondUntilDate(): DateTimeImmutable
     {
         $data = $this->readSettingsFile('general.json');
-        $weddingDate = $data['respond_until_date'];
-        $timezone = new DateTimeZone($data['wedding_timezone']);
+        $rsvpDate = $data['respond_until_date'];
+        $timezone = new DateTimeZone($data['wedding_timezone'] ?? 'Europe/Berlin');
 
-        return DateTimeImmutable::createFromFormat('Y-m-d', $weddingDate, $timezone);
+        return DateTimeImmutable::createFromFormat('Y-m-d', $rsvpDate, $timezone);
     }
 
     private function buildDirectionsModule(): Directions
