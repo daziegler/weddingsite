@@ -71,7 +71,7 @@ final class Router
                     break;
 
                 case '/api/upload-photo':
-                    $controller = new UploadPhotoController();
+                    $controller = new UploadPhotoController($this->config->uploadDirectory());
                     $controller->handle();
                     break;
 
