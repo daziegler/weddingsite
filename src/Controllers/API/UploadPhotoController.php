@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WeddingSite\Controllers\API;
 
 use WeddingSite\Controllers\AbstractController;
+use WeddingSite\Infrastructure\HttpException;
 
 final readonly class UploadPhotoController extends AbstractController
 {
@@ -13,40 +14,30 @@ final readonly class UploadPhotoController extends AbstractController
         'image/png' => 'png',
         'image/webp' => 'webp',
     ];
+    public function __construct(private string $originalUploadDirectory) {}
 
     public function handle(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo 'Method Not Allowed';
-            exit;
+            throw HttpException::methodNotAllowed('Method Not Allowed');
         }
 
         if (isset($_FILES['photo']) === false) {
-            http_response_code(400);
-            echo 'No file uploaded';
-            exit;
+            throw HttpException::badRequest('No file uploaded');
         }
 
         $file = $_FILES['photo'];
         $this->assertFileIsValid($file);
 
-        $uploadDir = $this->getUploadDir();
+        $uploadDir = $this->originalUploadDirectory;
         $this->ensureDir($uploadDir);
 
         $saved = $this->saveUploadedFile($file, $uploadDir);
         if ($saved === false) {
-            http_response_code(500);
-            echo 'Upload failed';
-            exit;
+            throw HttpException::internal('Upload failed');
         }
 
         echo 'OK';
-    }
-
-    private function getUploadDir(): string
-    {
-        return sprintf('%s/uploads/original', dirname(__DIR__, 3));
     }
 
     private function ensureDir(string $dir): void
