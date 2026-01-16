@@ -1,5 +1,7 @@
 /.idea/
 
+/dev/
+
 /.secrets/
 /.settings/
 /.optional-templates/
