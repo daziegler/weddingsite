@@ -46,9 +46,7 @@ final readonly class UploadPhotoController extends AbstractController
 
     private function getUploadDir(): string
     {
-        echo sprintf('%s/uploads/', dirname(__DIR__, 3));
-
-        return sprintf('%s/uploads/', dirname(__DIR__, 3));
+        return sprintf('%s/uploads/original', dirname(__DIR__, 3));
     }
 
     private function ensureDir(string $dir): void

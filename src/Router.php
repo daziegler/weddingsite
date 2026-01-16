@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WeddingSite;
 
+use InvalidArgumentException;
+use Throwable;
 use WeddingSite\Controllers\API\AddMusicRequestEntryController;
 use WeddingSite\Controllers\API\AddRsvpEntryController;
 use WeddingSite\Controllers\API\GalleryDownloadController;
@@ -15,70 +17,91 @@ use WeddingSite\Controllers\View\GetMusicRequestListController;
 use WeddingSite\Controllers\View\GetRsvpListController;
 use WeddingSite\Controllers\View\HomeController;
 use WeddingSite\Controllers\View\ThankYouController;
+use WeddingSite\Infrastructure\Gallery\ImageDerivativeService;
+use WeddingSite\Infrastructure\HttpException;
+use WeddingSite\Infrastructure\ImageVariant;
 
 final class Router
 {
+    public function __construct(private readonly Config $config)
+    {
+    }
+
     public function route(string $uri): void
     {
-        switch ($uri) {
-            case '/rsvp':
-                $controller = new GetRsvpListController();
-                $controller->handle();
-                break;
+        try {
+            switch ($uri) {
+                case '/rsvp':
+                    $controller = new GetRsvpListController();
+                    $controller->handle();
+                    break;
 
-            case '/api/rsvp':
-                $controller = new AddRsvpEntryController();
-                $controller->handle();
-                break;
+                case '/api/rsvp':
+                    $controller = new AddRsvpEntryController();
+                    $controller->handle();
+                    break;
 
-            case '/musik':
-                $controller = new GetMusicRequestListController();
-                $controller->handle();
-                break;
+                case '/musik':
+                    $controller = new GetMusicRequestListController();
+                    $controller->handle();
+                    break;
 
-            case '/api/music':
-                $controller = new AddMusicRequestEntryController();
-                $controller->handle();
-                break;
+                case '/api/music':
+                    $controller = new AddMusicRequestEntryController();
+                    $controller->handle();
+                    break;
 
-            case '/fotos':
-                $controller = new GetGalleryController();
-                $controller->handle();
-                break;
+                case '/fotos':
+                    $controller = new GetGalleryController(
+                        $this->config->uploadDirectory(ImageVariant::ORIGINAL),
+                        $this->config->secretsDirectory()
+                    );
+                    $controller->handle();
+                    break;
 
-            case '/foto':
-                $controller = new GetGalleryImageController();
-                $controller->handle();
-                break;
+                case '/foto':
+                    $imageDerivativeService = new ImageDerivativeService($this->config->uploadDirectory());
+                    $controller = new GetGalleryImageController($imageDerivativeService);
+                    $controller->handle();
+                    break;
 
-            case '/i':
-                $controller = new GetImageController();
-                $controller->handle();
-                break;
+                case '/i':
+                    $controller = new GetImageController();
+                    $controller->handle();
+                    break;
 
-            case '/api/upload-photo':
-                $controller = new UploadPhotoController();
-                $controller->handle();
-                break;
+                case '/api/upload-photo':
+                    $controller = new UploadPhotoController();
+                    $controller->handle();
+                    break;
 
-            case '/api/gallery-download':
-                $controller = new GalleryDownloadController();
-                $controller->handle();
-                break;
+                case '/api/gallery-download':
+                    $controller = new GalleryDownloadController();
+                    $controller->handle();
+                    break;
 
-            case '/danke':
-                $controller = new ThankYouController();
-                $controller->handle();
-                break;
+                case '/danke':
+                    $controller = new ThankYouController();
+                    $controller->handle();
+                    break;
 
-            case '/':
-                $controller = new HomeController();
-                $controller->handle();
-                break;
+                case '/':
+                    $controller = new HomeController();
+                    $controller->handle();
+                    break;
 
-            default:
-                http_response_code(404);
-                echo "404 Not Found";
+                default:
+                    throw HttpException::notFound('404 Not Found');
+            }
+        } catch (HttpException $e) {
+            http_response_code($e->statusCode());
+            echo $e->getMessage();
+        } catch (InvalidArgumentException $e) {
+            http_response_code(400);
+            echo $e->getMessage();
+        } catch (Throwable) {
+            http_response_code(500);
+            echo 'Internal Server Error';
         }
     }
 }

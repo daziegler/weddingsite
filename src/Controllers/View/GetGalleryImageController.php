@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace WeddingSite\Controllers\View;
 
 use WeddingSite\Controllers\AbstractController;
+use WeddingSite\Infrastructure\Gallery\ImageDerivativeRequest;
+use WeddingSite\Infrastructure\Gallery\ImageDerivativeServiceInterface;
+use WeddingSite\Infrastructure\Gallery\ImageException;
+use WeddingSite\Infrastructure\HttpException;
+use WeddingSite\Infrastructure\ImageVariant;
 
 final readonly class GetGalleryImageController extends AbstractController
 {
@@ -13,42 +18,46 @@ final readonly class GetGalleryImageController extends AbstractController
         'image/png',
         'image/webp',
     ];
-    private string $uploadDir;
 
-    public function __construct()
+    public function __construct(private ImageDerivativeServiceInterface $imageDerivativeService)
     {
-        $this->uploadDir = sprintf('%s/uploads/', dirname(__DIR__, 3));
     }
 
     public function handle(): void
     {
         $this->assertAuthenticated();
-        if (isset($_GET['file']) === false) {
-            http_response_code(400);
-            echo 'Missing file parameter';
-            exit;
-        }
+        $fileParam = rawurldecode($_GET['file'] ?? ''); // prevent directory traversal
 
-        $filename = basename(urldecode($_GET['file'])); // prevent directory traversal
-        $filepath = $this->uploadDir . $filename;
-
-        if (file_exists($filepath) === false) {
-            http_response_code(404);
-            echo 'File not found';
-            exit;
+        $variant = ImageVariant::tryFrom($_GET['variant'] ?? '') ?? ImageVariant::ORIGINAL;
+        try {
+            $request = new ImageDerivativeRequest($fileParam, $variant);
+            $filepath = $this->imageDerivativeService->ensure($request);
+        } catch (ImageException $e) {
+            $this->handleImageException($e);
         }
 
         $mime = mime_content_type($filepath);
         if (in_array($mime, self::ALLOWED_MIME_TYPES, true) === false) {
-            http_response_code(403);
-            echo 'Forbidden';
-            exit;
+            throw HttpException::forbidden();
         }
 
         header('Content-Type: ' . $mime);
         header('Content-Length: ' . filesize($filepath));
+        header('Cache-Control: private, max-age=3600');
+        header('Content-Disposition: inline');
+
         readfile($filepath);
-        exit;
+    }
+
+    private function handleImageException(ImageException $e): never
+    {
+        throw match ($e->getCode()) {
+            ImageException::ORIGINAL_NOT_FOUND => HttpException::notFound('Image not found'),
+            ImageException::INVALID_FILENAME => HttpException::badRequest('Invalid filename'),
+            ImageException::UNSUPPORTED_VARIANT => HttpException::badRequest('Bad Image Variant'),
+            ImageException::DERIVATIVE_FAILED => HttpException::internal('Could not create derivative'),
+            default => HttpException::internal('Unknown image error'),
+        };
     }
 
     private function assertAuthenticated(): void
@@ -58,8 +67,6 @@ final readonly class GetGalleryImageController extends AbstractController
             return;
         }
 
-        http_response_code(401);
-        echo 'Forbidden';
-        exit;
+        throw HttpException::unauthorized();
     }
 }

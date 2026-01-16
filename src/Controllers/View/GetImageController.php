@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WeddingSite\Controllers\View;
 
 use WeddingSite\Controllers\AbstractController;
+use WeddingSite\Infrastructure\HttpException;
 
 final readonly class GetImageController extends AbstractController
 {
@@ -23,30 +24,26 @@ final readonly class GetImageController extends AbstractController
     public function handle(): void
     {
         if (isset($_GET['file']) === false) {
-            http_response_code(400);
-            echo 'Missing file parameter';
-            exit;
+            throw HttpException::badRequest('Missing file parameter');
         }
 
-        $filename = basename(urldecode($_GET['file'])); // prevent directory traversal
+        $filename = basename(rawurldecode($_GET['file'])); // prevent directory traversal
         $filepath = $this->uploadDir . $filename;
 
         if (file_exists($filepath) === false) {
-            http_response_code(404);
-            echo 'File not found';
-            exit;
+            throw HttpException::notFound('Image not found');
         }
 
         $mime = mime_content_type($filepath);
         if (in_array($mime, self::ALLOWED_MIME_TYPES, true) === false) {
-            http_response_code(403);
-            echo 'Forbidden';
-            exit;
+            throw HttpException::forbidden();
         }
 
         header('Content-Type: ' . $mime);
         header('Content-Length: ' . filesize($filepath));
+        header('Cache-Control: private, max-age=3600');
+        header('Content-Disposition: inline');
+
         readfile($filepath);
-        exit;
     }
 }

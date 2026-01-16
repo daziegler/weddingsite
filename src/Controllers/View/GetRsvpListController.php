@@ -6,6 +6,7 @@ namespace WeddingSite\Controllers\View;
 
 use WeddingSite\Controllers\AbstractController;
 use WeddingSite\Controllers\PasswordProtectedTrait;
+use WeddingSite\Infrastructure\HttpException;
 use WeddingSite\Modules\RsvpList;
 use WeddingSite\Modules\RsvpListItem;
 
@@ -28,9 +29,7 @@ final readonly class GetRsvpListController extends AbstractController
         $this->authenticateUser();
         // Ensure data is coming via GET
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            http_response_code(405);
-            echo 'Method not allowed';
-            exit;
+            throw HttpException::methodNotAllowed();
         }
         $listItems = $this->extractDataFromFile();
 

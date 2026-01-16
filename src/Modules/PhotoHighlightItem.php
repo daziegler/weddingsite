@@ -13,7 +13,7 @@ final readonly class PhotoHighlightItem extends AbstractModule
     public function render(): string
     {
         $html = $this->getTemplate();
-        $imageUrl = sprintf('/i?file=%s', urlencode($this->imagePath));
+        $imageUrl = sprintf('/i?file=%s', rawurlencode($this->imagePath));
 
         return str_replace('[[PHOTO_HIGHLIGHT_IMAGE_PATH]]', $imageUrl, $html);
     }

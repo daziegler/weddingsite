@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WeddingSite\Controllers\View;
 
 use WeddingSite\Controllers\AbstractController;
+use WeddingSite\Infrastructure\HttpException;
 use WeddingSite\Modules\MusicRequestList;
 use WeddingSite\Modules\MusicRequestListItem;
 
@@ -26,9 +27,7 @@ final readonly class GetMusicRequestListController extends AbstractController
     public function handle(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            http_response_code(405);
-            echo 'Method not allowed';
-            exit;
+            throw HttpException::methodNotAllowed();
         }
 
         $listItems = $this->extractSortedSongs();

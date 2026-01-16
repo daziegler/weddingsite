@@ -13,14 +13,11 @@ final readonly class GetGalleryController extends AbstractController
 {
     use PasswordProtectedTrait;
 
-    private string $uploadDir;
     private string $passwordFile;
 
-    public function __construct()
+    public function __construct(private string $originalUploadDirectory, string $secretsDirectory)
     {
-        $projectRoot = dirname(__DIR__, 3);
-        $this->uploadDir = sprintf('%s/uploads/', $projectRoot);
-        $this->passwordFile = sprintf('%s/.secrets/gallery-password.txt', $projectRoot);
+        $this->passwordFile = sprintf('%s/gallery-password.txt', $secretsDirectory);
     }
 
     public function handle(): void
@@ -31,12 +28,12 @@ final readonly class GetGalleryController extends AbstractController
 
     private function renderGallery(): void
     {
-        $files = glob($this->uploadDir . '*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-        $fileUrls = array_map(fn($file) => basename($file), $files);
+        $files = glob(sprintf('%s*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP}', $this->originalUploadDirectory), GLOB_BRACE);
+        $fileNames = array_map(fn($file) => basename($file), $files);
 
         $galleryItems = array_map(
-            fn($url) => new GalleryItem($url),
-            $fileUrls
+            fn($fileName) => new GalleryItem($fileName),
+            $fileNames
         );
         echo (new Gallery($galleryItems))->render();
     }
