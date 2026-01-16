@@ -76,7 +76,9 @@ final class Router
                     break;
 
                 case '/api/gallery-download':
-                    $controller = new GalleryDownloadController();
+                    $controller = new GalleryDownloadController(
+                        $this->config->uploadDirectory(ImageVariant::ORIGINAL),
+                    );
                     $controller->handle();
                     break;
 

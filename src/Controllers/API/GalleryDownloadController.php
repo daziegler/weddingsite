@@ -9,12 +9,18 @@ use ZipArchive;
 
 final readonly class GalleryDownloadController extends AbstractController
 {
+    public function __construct(private string $originalUploadDirectory)
+    {
+    }
+
     public function handle(): void
     {
         $this->assertAuthenticated();
 
-        $uploadDir = sprintf('%s/uploads/', dirname(__DIR__, 3));
-        $images = glob($uploadDir . '*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+        $images = glob(
+            sprintf('%s*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP}', $this->originalUploadDirectory),
+            GLOB_BRACE
+        );
 
         if ($images === false || $images === []) {
             http_response_code(404);
